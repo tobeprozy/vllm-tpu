@@ -8,6 +8,7 @@
   - [1 环境准备](#1-环境准备)
     - [1.1 依赖安装](#11-依赖安装)
     - [1.2 下载docker镜像和模型](#12-下载docker镜像和模型)
+    - [1.3 开启p2p（每次重启都需要开启）](#13-开启p2p每次重启都需要开启)
   - [2 docker部署](#2-docker部署)
     - [2.1 安装docker](#21-安装docker)
     - [2.2 加载并启动docker](#22-加载并启动docker)
@@ -17,7 +18,6 @@
     - [3.1 离线服务](#31-离线服务)
   - [4 其它事项](#4-其它事项)
     - [4.1 vllm说明](#41-vllm说明)
-    - [4.2 开启p2p](#42-开启p2p)
 
 
 ## 简介
@@ -42,6 +42,64 @@ python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/qwen/config.tar.gz # 配置文�
 python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/qwen/driver-0619.tar.gz # 驱动，必须更新
 python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/vllm-example.zip # vllm 示例代码，可以不下，使用本仓库代码
 ```
+
+
+### 1.3 开启p2p（每次重启都需要开启）
+查看 p2p 是否可用：
+```bash
+test_cdma_p2p 0x130000000 0 0x140000000 1 0x100000 
+```
+
+若显示带宽（Bandwidth）只有 1500MB/s 左右，可能是 p2p 不可用，需要按以下步骤开启：
+
+a. iommu 没有关闭，按如下过程关闭：
+```bash
+sudo vi /etc/default/grub 
+# 根据 CPU 类型选择添加 intel_iommu=off/amd_iommu=off 
+# GRUB_CMDLINE_LINUX="crashkernel=auto rhgb quiet intel_iommu=off" 
+# GRUB_CMDLINE_LINUX="crashkernel=auto rhgb quiet amd_iommu=off" 
+sudo update-grub 
+sudo reboot
+```
+
+b. iommu 关闭后速度依然上不来，可能还需要配置一下 PCIE 链路。
+```bash
+lspci | grep 4052 
+# 如果只有一张卡，显示可能如下，82 便是卡的编号。多张卡会显示多个，下面是三张8芯卡：
+# 81:00.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# 82:00.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# 82:01.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# 82:02.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# 82:03.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# 82:04.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# 82:05.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# 82:06.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# 82:07.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# c1:00.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# c2:00.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# c2:01.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# c2:02.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# c2:03.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# c2:04.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# c2:05.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# c2:06.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# c2:07.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# e1:00.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# e2:00.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# e2:01.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# e2:02.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# e2:03.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# e2:04.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# e2:05.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# e2:06.0 PCI bridge: PMC-Sierra Inc. Device 4052
+# e2:07.0 PCI bridge: PMC-Sierra Inc. Device 4052
+```
+
+c. 配置 PCIE 链路，每张卡都需要运行如下命令，将配置卡号为82的所有芯片。
+```bash
+sudo setpci -v -s 82:*.0 ecap_acs+6.w=0 
+```
+然后再重新安装驱动即可。
 
 ## 2 docker部署
 
@@ -145,42 +203,3 @@ python3 offline_inference_sophgo.py --model /workspace/config_tobe
 ```bash
 cd /usr/local/lib/python3.10/dist-packages/vllm
 ```
-
-### 4.2 开启p2p
-查看 p2p 是否可用：
-```bash
-test_cdma_p2p 0x130000000 0 0x140000000 1 0x100000 
-```
-
-若显示带宽（Bandwidth）只有 1500MB/s 左右，可能是 p2p 不可用，需要按以下步骤开启：
-
-a. iommu 没有关闭，按如下过程关闭：
-```bash
-sudo vi /etc/default/grub 
-# 根据 CPU 类型选择添加 intel_iommu=off/amd_iommu=off 
-# GRUB_CMDLINE_LINUX="crashkernel=auto rhgb quiet intel_iommu=off" 
-# GRUB_CMDLINE_LINUX="crashkernel=auto rhgb quiet amd_iommu=off" 
-sudo update-grub 
-sudo reboot
-```
-
-b. iommu 关闭后速度依然上不来，可能还需要配置一下 PCIE 链路。运行如下命令，确定卡的编号：
-```bash
-lspci | grep 4052 
-# 如果只有一张卡，显示可能如下，82 便是卡的编号。多张卡会显示多个：
-# 81:00.0 PCI bridge: PMC-Sierra Inc. Device 4052 
-# 82:00.0 PCI bridge: PMC-Sierra Inc. Device 4052 
-# 82:01.0 PCI bridge: PMC-Sierra Inc. Device 4052 
-# 82:02.0 PCI bridge: PMC-Sierra Inc. Device 4052 
-# 82:03.0 PCI bridge: PMC-Sierra Inc. Device 4052 
-# 82:04.0 PCI bridge: PMC-Sierra Inc. Device 4052 
-# 82:05.0 PCI bridge: PMC-Sierra Inc. Device 4052 
-# 82:06.0 PCI bridge: PMC-Sierra Inc. Device 4052 
-# 82:07.0 PCI bridge: PMC-Sierra Inc. Device 4052
-```
-
-c. 配置 PCIE 链路，每张卡都需要运行如下命令：
-```bash
-sudo setpci -v -s 82:*.0 ecap_acs+6.w=0 
-```
-然后再重新安装驱动即可。
