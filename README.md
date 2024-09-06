@@ -9,9 +9,10 @@
     - [1.1 依赖安装](#11-依赖安装)
     - [1.2 下载 vllm-TPU 的 docker 镜像和模型](#12-下载-vllm-tpu-的-docker-镜像和模型)
   - [2 docker部署](#2-docker部署)
-    - [2.1 加载并启动docker](#21-加载并启动docker)
-    - [2.2 准备配置文件和模型](#22-准备配置文件和模型)
-    - [2.3 更新libsophon和driver](#23-更新libsophon和driver)
+    - [2.1 安装docker](#21-安装docker)
+    - [2.2 加载并启动docker](#22-加载并启动docker)
+    - [2.3 准备配置文件和模型](#23-准备配置文件和模型)
+    - [2.4 更新libsophon和driver](#24-更新libsophon和driver)
   - [3 启动服务](#3-启动服务)
     - [3.1 离线服务](#31-离线服务)
   - [4 其它事项](#4-其它事项)
@@ -44,7 +45,24 @@ python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/vllm-example.zip # vllm 示例�
 
 ## 2 docker部署
 
-### 2.1 加载并启动docker
+### 2.1 安装docker
+若已安装docker，请跳过本节。 执行以下脚本安装 docker 并将当前用户加入 docker 组，获得 docker 执行权限。
+```bash
+# 安装docker
+sudo apt-get install docker.io
+sudo systemctl start docker
+sudo systemctl enable docker
+# docker命令免root权限执行
+# 创建docker用户组，若已有docker组会报错，可忽略
+sudo groupadd docker
+# 将当前用户加入docker组
+sudo usermod -aG docker $USER
+# 重启docker服务
+sudo service docker restart
+# 切换当前会话到新group或重新登录重启会话
+newgrp docker​
+```
+### 2.2 加载并启动docker
 ```bash
 docker load -i ./vllm-tpu-v3.tar
 docker rm vllm-tpu -f 
@@ -53,13 +71,14 @@ chmod +x docker_run.sh
 ./docker_run.sh
 ```
 
-### 2.2 准备配置文件和模型
+### 2.3 准备配置文件和模型
 ```bash
 tar zxvf combine.tar.gz 
 mv combine qwen14b-bmodel 
 ```
 
 需要在原有的 Qwen-14B 的 config 文件中加入以下参数：
+
 a) 将 architectures 中的关键字改成 QWenSophgo，代表使用 Sophgo 的硬件进行推理，**一般不需要修改。**
 ```bash
  "architectures": [ 
@@ -93,7 +112,7 @@ f) prefill_bmodel_size 和 decode_bmodel_size 是和 bmodel 模型相关的固�
  "decode_bmodel_size":16,
 ```
 
-### 2.3 更新libsophon和driver
+### 2.4 更新libsophon和driver
 
 ```bash
 sudo apt install dkms libncurses5 
