@@ -144,7 +144,6 @@ a) 将 architectures 中的关键字改成 QWenSophgo，代表使用 Sophgo 的�
  ],
  ```
 b) core_num 参数，表示使用 Sophgo 产品的 8 个核进行推理，这个应该根据产品的型号进行，**一般不需要修改。**
-修改
 ```bash
 "core_num": 8,
 ```
@@ -159,12 +158,12 @@ d) model_path 是使用 Sophgo 硬件推理所需要的模型格式 bmodel 位�
 "model_path": "/workspace/qwen14b-bmodel", 
 ```
 
-e) kv_block_num 是存储 kv cache 的 block 的数量
+e) kv_block_num 是存储 kv cache 的 block 的数量。
 ```bash
 "kv_block_num":1000, 
 ```
 
-f) prefill_bmodel_size 和 decode_bmodel_size 是和 bmodel 模型相关的固定参数，**不需要修改**
+f) prefill_bmodel_size 和 decode_bmodel_size 是和 bmodel 模型相关的固定参数，**不需要修改。**
 ```bash
  "prefill_bmodel_size":512, 
  "decode_bmodel_size":16,
