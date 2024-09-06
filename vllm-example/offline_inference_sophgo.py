@@ -10,21 +10,6 @@ def main(args: argparse.Namespace):
     # Sample prompts.
     prompts = [
         "你好",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is",
-        # "Hello, my name is"
         "太阳从哪边升起来",
         "水是剧毒的吗？",
         "法国的首都在哪里？",
@@ -40,27 +25,6 @@ def main(args: argparse.Namespace):
         "圆周率和自然常数谁更大",
         "2的10次方等于",
         "离离原上草，",
-        # "Hello, my name is",
-        # "The president of the United States is",
-        # "The capital of France is",
-        # "The future of AI is",
-        # "Hello, who are you, and where are you from?",
-        # "Who is the president of the United States?",
-        # "The capital of France is",
-        # "The future of AI is",
-        # "How might climate change influence migration patterns across different continents in the future?",
-        # "Could you describe the potential impact of quantum computing on global encryption standards?",
-        # "Can you explain how machine learning differs from traditional programming in detail?",
-        # "What are the two basic postulates of special relativity?",
-        # "When did dinosaurs become extinct?",
-        # "Which came first, the chicken or the egg?",
-        # "How is machine learning being used to predict and manage natural disasters?",
-        # "In what ways can virtual reality technology transform education and training?",
-        # "What strategies are most effective in conserving biodiversity in urban environments?",
-        # "How do advancements in material science impact the development of sustainable packaging?",
-        # "What are the ethical considerations of gene editing technologies like CRISPR?",
-        # "How does the gut microbiome influence human health and disease?"
-
     ]
     
     # Create a sampling params object.
