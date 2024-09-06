@@ -2,17 +2,19 @@
 
 ## 目录
 
-- [1 框架接入流程](#1-框架接入流程)
-  - [1.1 基本流程](#11-基本流程)
-  - [1.2 实现细节](#12-实现细节)
-- [2 模型导出与编译](#2-模型导出与编译)
-  - [2.1 导出onnx](#21-导出onnx)
-  - [2.2 编译bmodel](#22-编译bmodel)
-- [3 其他事项](#3-其他事项)
-- [4 具体步骤](#4-具体步骤)
-  - [4.1 修改seq_length](#41-修改seq_length)
-  - [4.2 导出onnx](#42-导出onnx)
-  - [4.3 导出bmodel](#43-导出bmodel)
+- [vllm框架模型导出和编译](#vllm框架模型导出和编译)
+  - [目录](#目录)
+  - [1 框架接入流程](#1-框架接入流程)
+    - [1.1 基本流程](#11-基本流程)
+    - [1.2 实现细节](#12-实现细节)
+  - [2 模型导出与编译](#2-模型导出与编译)
+    - [2.1 导出onnx](#21-导出onnx)
+    - [2.2 编译bmodel](#22-编译bmodel)
+  - [3 其他事项](#3-其他事项)
+  - [4 具体步骤](#4-具体步骤)
+    - [4.1 修改seq\_length](#41-修改seq_length)
+    - [4.2 导出onnx](#42-导出onnx)
+    - [4.3 导出bmodel](#43-导出bmodel)
 
 
 
@@ -167,14 +169,12 @@ lm_head()
 
 
 
-
 ## 4 具体步骤
 
 ### 4.1 修改seq_length
 
 切换到Qwen/compile/目录下后，手动将files/Qwen-14B-Chat/config.json中的`"seq_length": 512,`修改为你需要的长度
 ```shell
-cd /workspace/LLM-TPU/models/Qwen/compile
 vi files/Qwen-14B-Chat/config.json
 ```
 
@@ -216,4 +216,3 @@ PS：
 1. mode：量化方式，目前支持fp16/bf16/int8/int4
 2. name：模型名称，目前Qwen系列支持 Qwen-1.8B/Qwen-7B/Qwen-14B
 3. seq_length：模型支持的最大token长度
-

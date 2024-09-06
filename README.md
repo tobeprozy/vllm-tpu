@@ -1,8 +1,8 @@
-# vllm-qwen-14
+# vllm-tpu
 
 ## 目录
 
-- [vllm-qwen-14](#vllm-qwen-14)
+- [vllm-tpu](#vllm-tpu)
   - [目录](#目录)
   - [简介](#简介)
   - [1 环境准备](#1-环境准备)
@@ -31,17 +31,17 @@ sudo apt install python3-pip
 
 ```bash
 python3 -m pip install dfss --upgrade 
-python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/qwen/vllm-tpu-v3.tar 
-python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/qwen/combine.tar.gz 
-python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/qwen/config.tar.gz 
-python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/qwen/driver-0619.tar.gz 
-python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/vllm-example.zip
+python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/qwen/vllm-tpu-v3.tar # 镜像
+python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/qwen/combine.tar.gz # qwen2-14B bmodel，如果自己编译，可以不下
+python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/qwen/config.tar.gz # 配置文件，可以不下，仓库已经包含了
+python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/qwen/driver-0619.tar.gz # 驱动，必须更新
+python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/vllm-example.zip # vllm 示例代码，可以不下，使用本仓库代码
 ```
 
 ## 2 docker部署
 
 ### 2.1 加载并启动docker
-```
+```bash
 docker load -i ./vllm-tpu-v3.tar
 docker rm vllm-tpu -f 
 python3 -m dfss --url=open@sophgo.com:/ezoo/vllm/docker_run.sh 
@@ -50,7 +50,7 @@ chmod +x docker_run.sh
 ```
 
 ### 2.2 准备配置文件和模型
-```
+```bash
 tar zxvf combine.tar.gz 
 mv combine qwen14b-bmodel 
 tar zxvf config.tar.gz -C qwen14b-bmodel
@@ -72,8 +72,7 @@ c) device_id 参数，可以通过 bm-smi 查看 Sophgo 产品在服务器中的
 ```bash
 "device_id": [0,1,2,3,4,5,6,7], 
 ```
-d) model_path 是使用 Sophgo 硬件推理所需要的模型格式 bmodel 位置，注意不要改动文件夹
-里 bmodel 的名字以及相对位置
+d) model_path 是使用 Sophgo 硬件推理所需要的模型格式 bmodel 位置，注意保证文件夹里 bmodel 的名字和json文件对应。
 ```bash
 "model_path": "/workspace/qwen14b-bmodel", 
 ```
@@ -98,5 +97,6 @@ chmod +x update-0715/update.sh
 ## 2.3 启动服务
 ### 2.3.1 离线服务
 ```
+cd vllm-example/
 python3 offline_inference_sophgo.py --model /workspace/qwen14b-bmodel/config
 ```
