@@ -53,35 +53,38 @@ chmod +x docker_run.sh
 ```bash
 tar zxvf combine.tar.gz 
 mv combine qwen14b-bmodel 
-tar zxvf config.tar.gz -C qwen14b-bmodel
 ```
+
 需要在原有的 Qwen-14B 的 config 文件中加入以下参数：
-a) 将 architectures 中的关键字改成 QWenSophgo，代表使用 Sophgo 的硬件进行推理:
+a) 将 architectures 中的关键字改成 QWenSophgo，代表使用 Sophgo 的硬件进行推理，**一般不需要修改。**
 ```bash
  "architectures": [ 
  "QWenSophgo" 
  ],
  ```
-b) core_num 参数，表示使用 Sophgo 产品的 8 个核进行推理，这个应该根据产品的型号进行
+b) core_num 参数，表示使用 Sophgo 产品的 8 个核进行推理，这个应该根据产品的型号进行，**一般不需要修改。**
 修改
 ```bash
 "core_num": 8,
 ```
 
-c) device_id 参数，可以通过 bm-smi 查看 Sophgo 产品在服务器中的每个核的序号
+c) device_id 参数，可以通过 bm-smi 查看 Sophgo 产品在服务器中的每个核的序号，**一般需要修改。**
 ```bash
 "device_id": [0,1,2,3,4,5,6,7], 
 ```
-d) model_path 是使用 Sophgo 硬件推理所需要的模型格式 bmodel 位置，注意保证文件夹里 bmodel 的名字和json文件对应。
+
+d) model_path 是使用 Sophgo 硬件推理所需要的模型格式 bmodel 位置，**注意保证文件夹里 bmodel 的名字和json文件对应。**
 ```bash
 "model_path": "/workspace/qwen14b-bmodel", 
 ```
+
 e) kv_block_num 是存储 kv cache 的 block 的数量
 ```bash
 "kv_block_num":1000, 
 ```
-f) prefill_bmodel_size 和 decode_bmodel_size 是和 bmodel 模型相关的固定参数，不需要修改
-```
+
+f) prefill_bmodel_size 和 decode_bmodel_size 是和 bmodel 模型相关的固定参数，**不需要修改**
+```bash
  "prefill_bmodel_size":512, 
  "decode_bmodel_size":16,
 ```
