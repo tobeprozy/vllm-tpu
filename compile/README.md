@@ -32,7 +32,7 @@ vllm中的kv\_cache为非连续存储，通过索引记录每一层cache的存�
 
 其余qkv的计算与mlp部分导出为bmodel，因此prefill/decode的bmodel输入输出都一致，只区分sequence length，目前是按照512长度作为prefill，通过分bin不同batch的长度作为decode (不同batch放在sequence 维度)。需要注意一点是attention算子不包含任何权重，因此完整attention部分的residual add和attention out matmul都是放在post bmodel 做的，因此多芯版本的post bmodel包含两次all-reduce，如下图。
 
-![](image/image_cdwlcNOmkq.png)
+![](pic/image_cdwlcNOmkq.png)
 
 ## 2 模型导出与编译
 
