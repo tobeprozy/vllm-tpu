@@ -7,7 +7,7 @@
   - [简介](#简介)
   - [1 环境准备](#1-环境准备)
     - [1.1 依赖安装](#11-依赖安装)
-    - [1.2 下载 vllm-TPU 的 docker 镜像和模型](#12-下载-vllm-tpu-的-docker-镜像和模型)
+    - [1.2 下载docker镜像和模型](#12-下载docker镜像和模型)
   - [2 docker部署](#2-docker部署)
     - [2.1 安装docker](#21-安装docker)
     - [2.2 加载并启动docker](#22-加载并启动docker)
@@ -32,7 +32,7 @@ sudo apt update
 sudo apt install python3-pip
 ```
 
-### 1.2 下载 vllm-TPU 的 docker 镜像和模型
+### 1.2 下载docker镜像和模型
 
 ```bash
 python3 -m pip install dfss --upgrade 
