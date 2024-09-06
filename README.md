@@ -11,8 +11,10 @@
   - [2 docker部署](#2-docker部署)
     - [2.1 加载并启动docker](#21-加载并启动docker)
     - [2.2 准备配置文件和模型](#22-准备配置文件和模型)
-  - [2.3 启动服务](#23-启动服务)
-    - [2.3.1 离线服务](#231-离线服务)
+  - [3 启动服务](#3-启动服务)
+    - [3.1 离线服务](#31-离线服务)
+  - [4 其它事项](#4-其它事项)
+    - [4.1 vllm说明](#41-vllm说明)
 
 
 ## 简介
@@ -97,10 +99,18 @@ chmod +x update-0715/update.sh
 ./update-0715/update.sh
 ```
 
-## 2.3 启动服务
-### 2.3.1 离线服务
+## 3 启动服务
+### 3.1 离线服务
 注意修改model的路径。
 ```bash
 cd vllm-example/
 python3 offline_inference_sophgo.py --model /workspace/config_tobe
+```
+
+## 4 其它事项
+### 4.1 vllm说明
+
+加载的容器默认安装了vllm，如果需要进行二次开发，可以在其安装路径下修改源文件：
+```bash
+cd /usr/local/lib/python3.10/dist-packages/vllm
 ```
