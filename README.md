@@ -96,7 +96,8 @@ chmod +x update-0715/update.sh
 
 ## 2.3 启动服务
 ### 2.3.1 离线服务
-```
+注意修改model的路径。
+```bash
 cd vllm-example/
-python3 offline_inference_sophgo.py --model /workspace/qwen14b-bmodel/config
+python3 offline_inference_sophgo.py --model /workspace/config_tobe
 ```
