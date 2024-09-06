@@ -11,7 +11,7 @@
     - [2.1 导出onnx](#21-导出onnx)
     - [2.2 编译bmodel](#22-编译bmodel)
   - [3 其他事项](#3-其他事项)
-  - [4 具体步骤](#4-具体步骤)
+  - [4 具体步骤（直接开始）](#4-具体步骤直接开始)
     - [4.1 修改seq\_length](#41-修改seq_length)
     - [4.2 导出onnx](#42-导出onnx)
     - [4.3 导出bmodel](#43-导出bmodel)
@@ -169,7 +169,7 @@ lm_head()
 
 
 
-## 4 具体步骤
+## 4 具体步骤（直接开始）
 
 ### 4.1 修改seq_length
 
@@ -202,9 +202,9 @@ PS：
 
 ```shell
 pip3 install dfss
-python3 -m dfss --url=open@sophgo.com:/ext_model_information/VLLM/tpu-mlir_v1.9.beta.0-4-g908d54a70-20240830.tar.gz
-tar -zxvf tpu-mlir_v1.9.beta.0-4-g908d54a70-20240830.tar.gz 
-cd tpu-mlir_v1.9.beta.0-4-g908d54a70-20240830
+python3 -m dfss --url=open@sophgo.com:/ext_model_information/VLLM/tpu-mlir_v1.9.beta.0-4-g0a5c44a32-20240905.tar.gz
+tar -zxvf tpu-mlir_v1.9.beta.0-4-g0a5c44a32-20240905.tar.gz
+cd tpu-mlir_v1.9.beta.0-4-g0a5c44a32-20240905
 source envsetup.sh
 ```
 

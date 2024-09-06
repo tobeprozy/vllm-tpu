@@ -11,6 +11,7 @@
   - [2 docker部署](#2-docker部署)
     - [2.1 加载并启动docker](#21-加载并启动docker)
     - [2.2 准备配置文件和模型](#22-准备配置文件和模型)
+    - [2.3 更新libsophon和driver](#23-更新libsophon和driver)
   - [3 启动服务](#3-启动服务)
     - [3.1 离线服务](#31-离线服务)
   - [4 其它事项](#4-其它事项)
@@ -89,6 +90,16 @@ f) prefill_bmodel_size 和 decode_bmodel_size 是和 bmodel 模型相关的固�
 ```bash
  "prefill_bmodel_size":512, 
  "decode_bmodel_size":16,
+```
+
+### 2.3 更新libsophon和driver
+
+```bash
+sudo apt install dkms libncurses5 
+tar zxvf driver-0619.tar.gz 
+cd driver-0619 
+sudo dpkg -i sophon-*.deb 
+source /etc/profile 
 ```
 
 下载 20240715 版本的更新包，更新模型以及配置。（此版本相对于 0704 版降低了 CPU 占用率，从 36 个核降至 9 个核，目前占用 900%。）
