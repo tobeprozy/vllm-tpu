@@ -134,6 +134,7 @@ test_cdma_p2p 0x130000000 0 0x140000000 1 0x100000
 ```
 
 若显示带宽（Bandwidth）只有 1500MB/s 左右，可能是 p2p 不可用，需要按以下步骤开启：
+
 a. iommu 没有关闭，按如下过程关闭：
 ```bash
 sudo vi /etc/default/grub 
