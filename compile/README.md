@@ -208,11 +208,12 @@ cd tpu-mlir_v1.9.beta.0-4-g908d54a70-20240830
 source envsetup.sh
 ```
 
+以编译输入长度为512，量化为W8F16为例：
 ```shell
-./compile.sh  --name qwen-14b  --seq_length 512
+./compile.sh --name qwen-14b --seq_length 512 --quantize int8
 ```
 
 PS：
-1. mode：量化方式，目前支持fp16/bf16/int8/int4
-2. name：模型名称，目前Qwen系列支持 Qwen-1.8B/Qwen-7B/Qwen-14B
+1. mode：量化方式，目前支持int8/int4
+2. name：模型名称，目前Qwen系列支持 qwen-1_8b/qwen-7b/qwen-14b/qwen-72b/
 3. seq_length：模型支持的最大token长度

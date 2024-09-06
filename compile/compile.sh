@@ -2,7 +2,6 @@
 #!/bin/bash
 set -ex
 models=
-mode="w8f16"
 folder="tmp"
 num_device=8
 mode_args=""
@@ -46,11 +45,11 @@ if [[ -z "$quantize" ]]; then
 fi
 
 if [ "$quantize" = "int4" ]; then
-  type="W4BF16"
-  echo "quantize type: W4BF16"
+  type="W4F16"
+  echo "quantize type: W4F16"
 elif [ "$quantize" = "int8" ]; then 
-  type="W8BF16"
-  echo "quantize type: W8BF16"
+  type="W8F16"
+  echo "quantize type: W8F16"
 else
   >&2 echo -e "Error: Invalid quantize $quantize"
   exit 1
@@ -91,7 +90,7 @@ embedding()
 
   model_deploy.py \
       --mlir embedding.mlir \
-      --quantize BF16 \
+      --quantize F16 \
       --chip bm1684x \
       --quant_output \
       --num_device ${dev} \
@@ -113,7 +112,7 @@ lm_head()
 
   model_deploy.py \
       --mlir lm_head.mlir \
-      --quantize BF16 \
+      --quantize F16 \
       --chip bm1684x \
       --quant_input \
       --quant_output \
