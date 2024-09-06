@@ -16,6 +16,7 @@
     - [3.1 离线服务](#31-离线服务)
   - [4 其它事项](#4-其它事项)
     - [4.1 vllm说明](#41-vllm说明)
+    - [4.2 开启p2p](#42-开启p2p)
 
 
 ## 简介
@@ -125,3 +126,41 @@ python3 offline_inference_sophgo.py --model /workspace/config_tobe
 ```bash
 cd /usr/local/lib/python3.10/dist-packages/vllm
 ```
+
+### 4.2 开启p2p
+查看 p2p 是否可用：
+```bash
+test_cdma_p2p 0x130000000 0 0x140000000 1 0x100000 
+```
+
+若显示带宽（Bandwidth）只有 1500MB/s 左右，可能是 p2p 不可用，需要按以下步骤开启：
+a. iommu 没有关闭，按如下过程关闭：
+```bash
+sudo vi /etc/default/grub 
+# 根据 CPU 类型选择添加 intel_iommu=off/amd_iommu=off 
+# GRUB_CMDLINE_LINUX="crashkernel=auto rhgb quiet intel_iommu=off" 
+# GRUB_CMDLINE_LINUX="crashkernel=auto rhgb quiet amd_iommu=off" 
+sudo update-grub 
+sudo reboot
+```
+
+b. iommu 关闭后速度依然上不来，可能还需要配置一下 PCIE 链路。运行如下命令，确定卡的编号：
+```bash
+lspci | grep 4052 
+# 如果只有一张卡，显示可能如下，82 便是卡的编号。多张卡会显示多个：
+# 81:00.0 PCI bridge: PMC-Sierra Inc. Device 4052 
+# 82:00.0 PCI bridge: PMC-Sierra Inc. Device 4052 
+# 82:01.0 PCI bridge: PMC-Sierra Inc. Device 4052 
+# 82:02.0 PCI bridge: PMC-Sierra Inc. Device 4052 
+# 82:03.0 PCI bridge: PMC-Sierra Inc. Device 4052 
+# 82:04.0 PCI bridge: PMC-Sierra Inc. Device 4052 
+# 82:05.0 PCI bridge: PMC-Sierra Inc. Device 4052 
+# 82:06.0 PCI bridge: PMC-Sierra Inc. Device 4052 
+# 82:07.0 PCI bridge: PMC-Sierra Inc. Device 4052
+```
+
+c. 配置 PCIE 链路，每张卡都需要运行如下命令：
+```bash
+sudo setpci -v -s 82:*.0 ecap_acs+6.w=0 
+```
+然后再重新安装驱动即可。
