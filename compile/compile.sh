@@ -202,7 +202,7 @@ post_block $num_device $num_layers 8
 pre_block $num_device $num_layers 16
 post_block $num_device $num_layers 16
 # lm_head
-lm_head $num_device 16
+lm_head 1 16
 popd
 
 pushd $combine_dir
